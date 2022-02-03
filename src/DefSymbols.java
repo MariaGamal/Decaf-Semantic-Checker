@@ -34,7 +34,6 @@ public class DefSymbols extends DecafBaseListener {
 		if (!flag) {
 			String key = "Error: No main method.";
 			errors.put(key, "1");
-			;
 		}
 		for (Enumeration k = errors.keys(); k.hasMoreElements();) {
 			System.out.println(k.nextElement());
@@ -116,6 +115,11 @@ public class DefSymbols extends DecafBaseListener {
 				currentScope.define(sym);
 			} else if (currentScope.getEnclosingScope().resolve(varName) == null) {
 				String key = String.format("VarError: %s is already declared", varName);
+				errors.put(key, "1");
+			}
+			if (ctx.line(i).INT_LITERAL() != null && Integer.parseInt(ctx.line(i).INT_LITERAL().getText()) <= 0)
+			{
+				String key = "Error: The'int literal' in an array declaration must be greater than 0.";
 				errors.put(key, "1");
 			}
 		}
