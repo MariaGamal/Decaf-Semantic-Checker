@@ -5,7 +5,8 @@ public class DefSymbols extends DecafBaseListener {
 	protected BasicScope globals;
 	protected Scope currentScope = null;
 	protected Dictionary errors = new Hashtable();
-	protected List<String> methods = new ArrayList<String>();
+	protected Dictionary methods = new Hashtable();
+//	protected List<String> methods = new ArrayList<String>();
 
 	// Handle Scopes
 
@@ -23,9 +24,9 @@ public class DefSymbols extends DecafBaseListener {
 		// pop the scope
 		currentScope = currentScope.getEnclosingScope();
 		boolean flag = false;
-		for (String method : methods)
+		for (Enumeration method = methods.keys(); method.hasMoreElements();)
 		{
-			if (Objects.equals(method, "main"))
+			if (Objects.equals(method.nextElement(), "main"))
 			{
 				flag = true;
 				break;
@@ -77,8 +78,15 @@ public class DefSymbols extends DecafBaseListener {
 			}
 		}
 		String funcName = ctx.ID(0).getText();
-//		System.out.println(funcName);
-		methods.add(funcName);
+		String retVal = "void";
+		for (var el:ctx.block().statement()) {
+			if (el.getChild(0).getText().equalsIgnoreCase("return")) {
+				retVal = el.getChild(1).getText();
+				break;
+			}
+		}
+		methods.put(funcName, retVal);
+
 		FunctionSymbol funcsymbol = new FunctionSymbol(funcName, currentScope);
 		currentScope.define(funcsymbol);
 		currentScope = funcsymbol;
@@ -101,11 +109,11 @@ public class DefSymbols extends DecafBaseListener {
 			if (currentScope.resolve(varName) == null) {
 				currentScope.define(sym);
 			} else if (currentScope.getEnclosingScope().resolve(varName) == null) {
-					String key = String.format("VarError: %s is already declared", varName);
-					errors.put(key, "1");
-					}
+				String key = String.format("VarError: %s is already declared", varName);
+				errors.put(key, "1");
 			}
 		}
+	}
 
 	@Override
 	public void enterField_decl(DecafParser.Field_declContext ctx) {
@@ -115,15 +123,15 @@ public class DefSymbols extends DecafBaseListener {
 			VariableSymbol sym = new VariableSymbol(varName);
 			if (currentScope.resolve(varName) == null) {
 				currentScope.define(sym);
+				if (ctx.line(i).INT_LITERAL() != null && Integer.parseInt(ctx.line(i).INT_LITERAL().getText()) <= 0) {
+					String key = "Error: The 'int literal' in an array declaration must be greater than 0.";
+					errors.put(key, "1");
+				}
 			} else if (currentScope.getEnclosingScope().resolve(varName) == null) {
 				String key = String.format("VarError: %s is already declared", varName);
 				errors.put(key, "1");
 			}
-			if (ctx.line(i).INT_LITERAL() != null && Integer.parseInt(ctx.line(i).INT_LITERAL().getText()) <= 0)
-			{
-				String key = "Error: The'int literal' in an array declaration must be greater than 0.";
-				errors.put(key, "1");
-			}
+
 		}
 	}
 
@@ -140,6 +148,19 @@ public class DefSymbols extends DecafBaseListener {
 		currentScope = currentScope.getEnclosingScope();
 	}
 
+	@Override
+	public void enterExpr(DecafParser.ExprContext ctx) {
+		if (ctx.method_call() != null) {
+			String methodName = ctx.method_call().method_name().ID().getText();
+			if (methods.get(methodName) == "void") {
+					String key = String.format("Error: method '" + methodName + "' must have a return value.");
+					errors.put(key, "1");
+			}
+		}
+
+	}
+
+
 	// Handle refs
 	@Override
 	public void enterStatement(DecafParser.StatementContext ctx) {
@@ -151,9 +172,14 @@ public class DefSymbols extends DecafBaseListener {
 				errors.put(key, "1");
 			}
 		}
-		if (ctx.getText().substring(0, 2).equals("if")) {
-			System.out.println(ctx.expr(0));
-		}
+//		if (ctx.getChild(0).getText().equalsIgnoreCase("if") ) {
+//			if (ctx.getChild(2).location() != null) {
+//				System.out.println(1);
+//			}
+//			if (ctx.getChild(2).location() != null) {
+//				System.out.println(1);
+//			}
+//		}
 
 	}
 
