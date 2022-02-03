@@ -96,9 +96,9 @@ public class DefSymbols extends DecafBaseListener {
 			}
 		}
 	public void enterField_decl(DecafParser.Field_declContext ctx) {
-		int numVars = ctx.ID().size();
+		int numVars = ctx.line().size();
 		for (int i = 0; i < numVars; i++){
-			String varName = ctx.ID(i).getText();
+			String varName = ctx.line(i).getText();
 			VariableSymbol sym = new VariableSymbol(varName);
 			if (currentScope.resolve(varName) == null) {
 				currentScope.define(sym);
