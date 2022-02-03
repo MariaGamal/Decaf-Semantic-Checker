@@ -106,6 +106,8 @@ public class DefSymbols extends DecafBaseListener {
 					}
 			}
 		}
+
+	@Override
 	public void enterField_decl(DecafParser.Field_declContext ctx) {
 		int numVars = ctx.line().size();
 		for (int i = 0; i < numVars; i++){
@@ -149,6 +151,10 @@ public class DefSymbols extends DecafBaseListener {
 				errors.put(key, "1");
 			}
 		}
+		if (ctx.getText().substring(0, 2).equals("if")) {
+			System.out.println(ctx.expr(0));
+		}
+
 	}
 
 //	@Override
