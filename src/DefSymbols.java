@@ -151,7 +151,7 @@ public class DefSymbols extends DecafBaseListener {
 	@Override
 	public void enterExpr(DecafParser.ExprContext ctx) {
 		if (ctx.method_call() != null) {
-			String methodName = ctx.method_call().method_name().ID().getText();
+			String methodName = ctx.method_call().getChild(0).getText();
 			if (methods.get(methodName) == "void") {
 					String key = String.format("Error: method '" + methodName + "' must have a return value.");
 					errors.put(key, "1");
@@ -159,7 +159,6 @@ public class DefSymbols extends DecafBaseListener {
 		}
 
 	}
-
 
 	// Handle refs
 	@Override
