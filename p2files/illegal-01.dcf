@@ -1,0 +1,8 @@
+class Program {
+  void main() {
+    int x, z, y;
+    boolean x;	// identifier declared twice
+    int x       // Check for reporting error more than once
+    int z, y    // Check multiple declarations at once
+  }								
+}

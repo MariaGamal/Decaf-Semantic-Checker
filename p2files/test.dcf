@@ -1,0 +1,7 @@
+class Program {
+  void main() {
+    int array[5];
+    int x;
+    x = array[a];    // identifier used without declaration
+  }								
+}	
