@@ -31,10 +31,6 @@ public class DefSymbols extends DecafBaseListener {
 		// Define a function symbol in the current scope
 		// make that function symbol the current scope
 		if (ctx.getChild(0).getText().equalsIgnoreCase("void") ){
-			if (ctx.block().statement().size() ==0){
-				String key = String.format("must have return in "+ctx.getChild(0).getText() +" type");
-				errors.put(key, "1");
-			}
 //			System.out.println(ctx.block().statement(0).getText());
 			for (var el:ctx.block().statement()) {
 
