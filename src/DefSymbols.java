@@ -5,6 +5,7 @@ public class DefSymbols extends DecafBaseListener {
 	protected BasicScope globals;
 	protected Scope currentScope = null;
 	protected Dictionary errors = new Hashtable();
+	protected List<String> methods = new ArrayList<String>();
 
 	// Handle Scopes
 
@@ -21,6 +22,20 @@ public class DefSymbols extends DecafBaseListener {
 	public void exitProgram(DecafParser.ProgramContext ctx) {
 		// pop the scope
 		currentScope = currentScope.getEnclosingScope();
+		boolean flag = false;
+		for (String method : methods)
+		{
+			if (Objects.equals(method, "main"))
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			String key = "Error: No main method.";
+			errors.put(key, "1");
+			;
+		}
 		for (Enumeration k = errors.keys(); k.hasMoreElements();) {
 			System.out.println(k.nextElement());
 		}
@@ -64,6 +79,7 @@ public class DefSymbols extends DecafBaseListener {
 		}
 		String funcName = ctx.ID(0).getText();
 //		System.out.println(funcName);
+		methods.add(funcName);
 		FunctionSymbol funcsymbol = new FunctionSymbol(funcName, currentScope);
 		currentScope.define(funcsymbol);
 		currentScope = funcsymbol;

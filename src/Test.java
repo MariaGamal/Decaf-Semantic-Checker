@@ -8,7 +8,7 @@ import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        String source = "p2files/semantics/illegal-02.dcf";
+        String source = "p2files/semantics/illegal-07.dcf";
         CharStream charstream = fromFileName(source);
         DecafLexer lexer = new DecafLexer(charstream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
