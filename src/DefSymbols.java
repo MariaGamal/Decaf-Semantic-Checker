@@ -94,7 +94,7 @@ public class DefSymbols extends DecafBaseListener {
 	public void enterField_decl(DecafParser.Field_declContext ctx) {
 		int numVars = ctx.line().size();
 		for (int i = 0; i < numVars; i++){
-			String varName = ctx.line(i).getText();
+			String varName = ctx.line(i).ID().getText();
 			VariableSymbol sym = new VariableSymbol(varName);
 			if (currentScope.resolve(varName) == null) {
 				currentScope.define(sym);
@@ -122,7 +122,7 @@ public class DefSymbols extends DecafBaseListener {
 	@Override
 	public void enterStatement(DecafParser.StatementContext ctx) {
 		if (ctx.location() != null) {
-			String varName = ctx.location().getText();
+			String varName = ctx.location().ID().getText();
 			Symbol sym = currentScope.resolve(varName);
 			if (sym == null) {
 				String key = String.format("Error: Identifier '" + varName + "' used without being declared.");
