@@ -1,6 +1,5 @@
 class Program {
   //int a;
-  int a[9];
   void main() {
     //int a;
     a = 34;	// identifier used before being declared

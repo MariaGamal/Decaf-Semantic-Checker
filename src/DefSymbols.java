@@ -37,7 +37,7 @@ public class DefSymbols extends DecafBaseListener {
 //				System.out.println(el.getRuleIndex());
 //				System.out.println(el.getChild(0).getText());
 				if (el.getChild(0).getText().equalsIgnoreCase("return")){
-					String key = "Can't have return in void type";
+					String key = "Can't have return in void type.";
 					errors.put(key, "1");
 				}
 			}
@@ -45,7 +45,7 @@ public class DefSymbols extends DecafBaseListener {
 		else {
 			int temp =0;
 			if (ctx.block().statement().size() ==0){
-				String key = String.format("must have return in "+ctx.getChild(0).getText() +" type");
+				String key = String.format("must have return in "+ctx.getChild(0).getText() +" type.");
 				errors.put(key, "1");
 			}
 			for (var el:ctx.block().statement()) {
